@@ -3,9 +3,11 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.net.URL;
+import java.util.Vector;
 
 import javax.media.*;
 import javax.media.format.AudioFormat;
+import javax.media.format.RGBFormat;
 /**
  * 
  * This code requires mp3plugin.jar to run. You may find it in lib/mp3plugin.jar
@@ -14,10 +16,16 @@ import javax.media.format.AudioFormat;
  */
 public class SimpleAudioPlayer {
 
-	public static void main(String args[]) throws NoPlayerException, CannotRealizeException, IOException {
-		MediaLocator ml = new MediaLocator((new File("roar_of_future.mp3").toURL()));
-		Player player = Manager.createRealizedPlayer(ml);
-		player.start();
+	public static void main(String args[]) {
+		
+		System.out.println("fun");
+		Vector deviceInfo = CaptureDeviceManager.getDeviceList(new RGBFormat());
+		System.out.println(deviceInfo.size());
+		for (Object obj : deviceInfo ) {
+			System.out.println(obj);
+		}
+		
+
 	}
 	
 }

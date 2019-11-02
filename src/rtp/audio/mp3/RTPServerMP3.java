@@ -16,14 +16,10 @@ import javax.media.format.AudioFormat;
  * @author hoymkot
  *
  */
-public class RTPServerMP3 implements ControllerListener, Runnable {
-	private boolean realized = false;
-	private boolean configured = false;
+public class RTPServerMP3 implements ControllerListener {
 	private String ipAddress;
 	Processor p;
-	MediaLocator src;
-
-	public static void main(String[] args) throws MalformedURLException {
+	public static void main(String[] args) throws NoProcessorException, IOException {
     	Format input1 = new AudioFormat(AudioFormat.MPEGLAYER3);
     	Format input2 = new AudioFormat(AudioFormat.MPEG);
     	Format output = new AudioFormat(AudioFormat.LINEAR);
@@ -32,16 +28,14 @@ public class RTPServerMP3 implements ControllerListener, Runnable {
     	        new Format[]{input1, input2},
     	        new Format[]{output},
     	        PlugInManager.CODEC);
-		RTPServerMP3 rtp = new RTPServerMP3("192.168.1.86", "roar_of_future.mp3");
-		Thread t = new Thread(rtp);
-		t.start();
+		RTPServerMP3 rtp = new RTPServerMP3("192.168.1.86");
+		rtp.p = Manager.createProcessor(new MediaLocator((new File( "roar_of_future.mp3")).toURL()));
+		rtp.p.addControllerListener(rtp);
+		rtp.p.configure();
 	}
-
-	public RTPServerMP3(String ip, String song) throws MalformedURLException {
+	public RTPServerMP3(String ip) throws MalformedURLException {
 		ipAddress = ip;
-		src = new MediaLocator((new File(song)).toURL());
 	}
-
 	private void setTrackFormat(Processor p) {
 		// Get the tracks from the processor
 		TrackControl[] tracks = p.getTrackControls();
@@ -106,48 +100,13 @@ public class RTPServerMP3 implements ControllerListener, Runnable {
 
 	public synchronized void controllerUpdate(ControllerEvent evt) {
 		if (evt instanceof RealizeCompleteEvent) {
-			realized = true;
+			transmit(p);
 		} else if (evt instanceof ConfigureCompleteEvent) {
-			configured = true;
-		} else if (evt instanceof EndOfMediaEvent) {
-			System.exit(0);
-		} else {
-			// System.out.println(evt.toString());
-		}
-	}
-
-	public void run() {
-
-		try {
-			p = Manager.createProcessor(src);
-			p.addControllerListener(this);
-			p.configure();
-			while (!configured) {
-				try {
-					Thread.currentThread().sleep(100L);
-					;
-				} catch (InterruptedException e) {
-					// ignore
-				}
-			}
-
 			setTrackFormat(p);
 			p.setContentDescriptor(new ContentDescriptor(ContentDescriptor.RAW_RTP));
-
 			p.realize();
-			while (!realized) {
-				try {
-					Thread.currentThread().sleep(100L);
-					;
-				} catch (InterruptedException e) {
-					// ignore
-				}
-			}
-			transmit(p);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
+		} else if (evt instanceof EndOfMediaEvent) {
+			System.exit(0);
+		} 
 	}
 }
