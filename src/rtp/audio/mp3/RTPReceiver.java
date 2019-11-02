@@ -1,24 +1,20 @@
-package rtp.video;
+package rtp.audio.mp3;
 
 import javax.media.*;
 
 import javax.swing.*;
-
-import net.sf.fmj.media.RegistryDefaults;
-import net.sf.fmj.utility.ClasspathChecker;
-
 import java.awt.*;
 import java.awt.event.*;
 
 import java.io.*;
-import java.lang.reflect.Field;
+import java.lang.management.ManagementFactory;
 
 /**
  * An instance of the MediaPlayerFrame may be used to display any media
  * recognized * by JMF. This is intended to be a very simple GUI example,
  * displaying all possible controls for the given media type.
  */
-public class MediaPlayerFrame extends JFrame {
+public class RTPReceiver extends JFrame {
 
 	/**
 	 * The frame title.
@@ -50,7 +46,7 @@ public class MediaPlayerFrame extends JFrame {
 	 * Create an instance of the media frame. No data will be displayed in the frame
 	 * until a player is set.
 	 */
-	public MediaPlayerFrame() {
+	public RTPReceiver() {
 		super(FRAME_TITLE);
 		setLocation(LOC_X, LOC_Y);
 		setSize(WIDTH, HEIGHT);
@@ -170,6 +166,7 @@ public class MediaPlayerFrame extends JFrame {
 
 		// create a new player with the new locator. This will effectively
 		// stop and discard any current player.
+		System.out.println("create a realized player for locator " + locator);
 		setPlayer(Manager.createRealizedPlayer(locator));
 	}
 
@@ -188,8 +185,10 @@ public class MediaPlayerFrame extends JFrame {
 		// refresh the tabbed pane.
 		tabPane.removeAll();
 
-		if (player == null)
+		if (player == null) {
+			System.out.println("no player is returned.");
 			return;
+		}
 
 		// add the new main panel
 		tabPane.add(CONTROL_PANEL_TITLE, createMainPanel());
@@ -214,16 +213,6 @@ public class MediaPlayerFrame extends JFrame {
 			player.close();
 		}
 	}
-	static {
-		System.setProperty("java.library.path", "D:/fmj-sf/native/win32-x86/");
-		try {
-			final Field sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
-			sysPathsField.setAccessible(true);
-			sysPathsField.set(null, null);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 
 	/**
@@ -231,29 +220,17 @@ public class MediaPlayerFrame extends JFrame {
 	 * is allowed, which is the media locator.
 	 */
 	public static void main(String[] args) {
-		try {
-			
-			// The following is require to register the plugins
-			if (!ClasspathChecker.checkAndWarn()) {
-				// JMF is ahead of us in the classpath. Let's do some things to make this go
-				// more smoothly.
+    	System.out.println(ManagementFactory.getRuntimeMXBean().getName());
 
-				// Let's register our own prefixes, etc, since they won't generally be if JMF is
-				// in charge.
-				RegistryDefaults.registerAll(RegistryDefaults.FMJ | RegistryDefaults.THIRD_PARTY);
-				// RegistryDefaults.unRegisterAll(RegistryDefaults.JMF); // TODO: this can be
-				// used to make some things that work in FMJ but not in JMF, work, like
-				// streaming mp3/ogg.
-				// TODO: what about the removal of some/reordering?
-			}
-			MediaPlayerFrame mpf = new MediaPlayerFrame();
+		try {
+			RTPReceiver mpf = new RTPReceiver();
 
 			/*
 			 * The following line creates a media locator using the String passed in through
 			 * the command line. This version should be used when receiving media streamed
 			 * over a network.
 			 */
-			// mpf.setMediaLocator(new MediaLocator(args[0]));
+			 mpf.setMediaLocator(new MediaLocator("rtp://192.168.1.86:49150/audio/1"));
 
 			/*
 			 * the following line may be used to create and set the media locator from a
@@ -261,8 +238,8 @@ public class MediaPlayerFrame extends JFrame {
 			 * streamed over a network, you should use the previous setMediaLocator() line
 			 * and comment this one out.
 			 */
-			MediaLocator ml = new MediaLocator((new File("output.mov")).toURL());
-			mpf.setMediaLocator(ml);
+//			 MediaLocator ml = new MediaLocator((new File("db.mpg")).toURL());
+//			mpf.setMediaLocator(ml);
 			mpf.show();
 			
 			
