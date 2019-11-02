@@ -190,18 +190,9 @@ public class RTPVideoWebcam extends ControllerAdapter {
 
 		@Override
 		public void run() {
-			try {
-				System.out.println("before sleep");
-				Thread.currentThread().sleep(15000);
-				System.out.println("after sleep");
-//				p.close();
-//				fw.close();
-				System.exit(0);
-
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+				while(true) {
+					;
+				}
 		}
 
 	}

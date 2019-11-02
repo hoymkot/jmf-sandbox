@@ -31,11 +31,9 @@ public class ClientStart extends JFrame {
 	static JPanel panel = new JPanel();
 	public static JFrame jf = new JFrame();
 
-
 	static void initUI() {
 		jf.setTitle("JMF Video Player Example");
 		jf.setSize(new Dimension(560, 480));
-
 		jf.setLayout(new BorderLayout());
 		panel.setPreferredSize(new Dimension(560, 410));
 		panel.setLayout(new BorderLayout());
@@ -59,8 +57,6 @@ public class ClientStart extends JFrame {
 		jf.setResizable(true);
 		jf.setDefaultCloseOperation(3);
 		jf.setVisible(true);
-
-
 	}
 
 
