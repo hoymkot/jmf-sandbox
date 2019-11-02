@@ -1,0 +1,53 @@
+#
+# JMF Version 2.1.1e
+#
+
+## Platform: Windows 7, x86, 6.1
+## Java VM: Oracle Corporation, 1.8.0_231
+
+## DataSource created: com.sun.media.protocol.javasound.DataSource@13fcdbd
+
+## DataSource created: net.sf.fmj.media.protocol.civil.DataSource@4edc67
+
+$$ Profile: instantiation: 2 ms
+
+## Processor created: com.sun.media.processor.unknown.Handler@bf3bbf
+##   using DataSource: com.ibm.media.protocol.MergingCDPushBDS@653222
+
+$$ Profile: parsing: 2135 ms
+
+## Building flow graph for: null
+
+## Building Track: 0
+## Input: LINEAR, 44100.0 Hz, 16-bit, Stereo, LittleEndian, Signed
+## An output content type is specified: QuickTime
+
+
+## Building Track: 1
+## Input: RGB, 640x480, FrameRate=30.0, 24-bit, Masks=3:2:1, PixelStride=3, LineStride=1920
+## Failed to open plugin com.sun.media.codec.video.jpeg.NativeEncoder@148c1c0. Will re-build the graph allover again
+
+
+## Here's the completed flow graph:
+  com.sun.media.parser.RawBufferParser@154c68d
+     connects to: com.ibm.media.codec.audio.PCMToPCM@222157
+     format: LINEAR, 44100.0 Hz, 16-bit, Stereo, LittleEndian, Signed
+  com.ibm.media.codec.audio.PCMToPCM@222157
+     connects to: com.sun.media.multiplexer.video.QuicktimeMux@1bb876e
+     format: LINEAR, 44100.0 Hz, 16-bit, Stereo, BigEndian, Signed, FrameSize=32 bits
+  com.sun.media.parser.RawBufferParser@154c68d
+     connects to: com.sun.media.codec.video.colorspace.JavaRGBConverter@16d30eb
+     format: RGB, 640x480, FrameRate=30.0, 24-bit, Masks=3:2:1, PixelStride=3, LineStride=1920
+  com.sun.media.codec.video.colorspace.JavaRGBConverter@16d30eb
+     connects to: com.sun.media.multiplexer.video.QuicktimeMux@1bb876e
+     format: RGB, 640x480, FrameRate=30.0, Length=614400, 16-bit, Masks=31744:992:31, PixelStride=2, LineStride=1280, BigEndian
+
+
+$$ Profile: graph building: 73 ms
+
+$$ Profile: realize, post graph building: 131 ms
+
+## DataSink created: com.sun.media.datasink.file.Handler@c273d3
+##   using DataSource: com.sun.media.multiplexer.BasicMux$BasicMuxDataSource@1423665
+
+!! Error: There should be atleast 1 keyframe in the track. All frames are now treated as keyframes

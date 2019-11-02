@@ -54,6 +54,7 @@ public class FMJVideoRecorder extends ControllerAdapter {
 		formats[0] = new AudioFormat(AudioFormat.LINEAR);
 		formats[1] = new VideoFormat(VideoFormat.RGB);
 		FileTypeDescriptor outputType = new FileTypeDescriptor(FileTypeDescriptor.QUICKTIME);
+//		FileTypeDescriptor outputType = new FileTypeDescriptor(FileTypeDescriptor.WAVE);
 		try {
 			Processor p = Manager.createRealizedProcessor(new ProcessorModel(formats, outputType));
 			// get the output of the processor
@@ -92,6 +93,7 @@ public class FMJVideoRecorder extends ControllerAdapter {
 				System.out.println("after sleep");
 				p.close();
 				fw.close();
+				System.exit(0);
 
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
